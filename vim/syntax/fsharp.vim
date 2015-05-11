@@ -13,6 +13,9 @@ elseif exists('b:current_syntax')
     finish
 endif
 
+" Fix nested comment highlighting
+syn sync minlines=256
+
 " F# is case sensitive.
 syn case match
 
