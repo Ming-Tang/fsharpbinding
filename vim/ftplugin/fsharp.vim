@@ -11,6 +11,37 @@ let b:did_ftplugin = 1
 let s:cpo_save = &cpo
 set cpo&vim
 
+" Jump to bindings in the first column, taken from python.
+nnoremap <silent> <buffer> ]] :call <SID>Fsharp_jump('/^\(let\\|type\\|do\\|module\\|namespace\\|and\)')<cr>
+nnoremap <silent> <buffer> [[ :call <SID>Fsharp_jump('?^\(let\\|type\\|do\\|module\\|namespace\\|and\)')<cr>
+nnoremap <silent> <buffer> ]m :call <SID>Fsharp_jump('/^\s*\(let\\|type\\|do\\|module\\|and\)')<cr>
+nnoremap <silent> <buffer> [m :call <SID>Fsharp_jump('?^\s*\(let\\|type\\|do\\|module\\|and\)')<cr>
+
+nnoremap <silent> <buffer> ]M :call <SID>Fsharp_jump('/^\s*\(module\\|namespace\)')<cr>
+nnoremap <silent> <buffer> [M :call <SID>Fsharp_jump('?^\s*\(module\\|namespace\)')<cr>
+nnoremap <silent> <buffer> ]l :call <SID>Fsharp_jump('/^\s*\(let\\|and\)')<cr>
+nnoremap <silent> <buffer> [l :call <SID>Fsharp_jump('?^\s*\(let\\|and\)')<cr>
+nnoremap <silent> <buffer> ]t :call <SID>Fsharp_jump('/^\s*\(type\\|and\\|exception\)')<cr>
+nnoremap <silent> <buffer> [t :call <SID>Fsharp_jump('?^\s*\(type\\|and\\|exception\)')<cr>
+nnoremap <silent> <buffer> ]b :call <SID>Fsharp_jump('/^\s*\(if\\|else\\|elif\\|for\\|while\\|match\)')<cr>
+nnoremap <silent> <buffer> [b :call <SID>Fsharp_jump('?^\s*\(if\\|else\\|elif\\|for\\|while\\|match\)')<cr>
+
+if exists('*<SID>Fsharp_jump') | finish | endif
+
+fun! <SID>Fsharp_jump(motion) range
+    let cnt = v:count1
+    " save last search pattern
+    let save = @/
+    mark '
+    while cnt > 0
+        silent! exe a:motion
+        let cnt = cnt - 1
+    endwhile
+    call histdel('/', -1)
+    " restore last search pattern
+    let @/ = save
+endfun
+
 let s:candidates = [ 'fsi',
             \ 'fsi.exe',
             \ 'fsharpi',
@@ -37,7 +68,7 @@ file_dir = vim.eval("expand('%:p:h')")
 sys.path.append(fsharp_dir)
 
 from fsharpvim import FSAutoComplete,Statics
-from fsi import FSharpInteractive 
+from fsi import FSharpInteractive
 import pyvim
 
 if Statics.fsac == None:
@@ -71,7 +102,7 @@ EOF
     com! -buffer -nargs=* -complete=file BuildProject call fsharpbinding#python#BuildProject(<f-args>)
     com! -buffer -nargs=* -complete=file RunTests call fsharpbinding#python#RunTests(<f-args>)
     com! -buffer -nargs=* -complete=file RunProject call fsharpbinding#python#RunProject(<f-args>)
-    
+
     "fsi
     com! -buffer FsiShow call fsharpbinding#python#FsiShow()
     com! -buffer FsiRead call fsharpbinding#python#FsiRead(0.5) "short timeout as there may not be anything to read
@@ -87,7 +118,7 @@ EOF
         au!
         " closing the scratch window after leaving insert mode
         " is common practice
-        au BufWritePre  *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufWritePre() 
+        au BufWritePre  *.fs,*.fsi,*fsx call fsharpbinding#python#OnBufWritePre()
         if version > 703
             " these events new in Vim 7.4
             au TextChanged  *.fs,*.fsi,*fsx call fsharpbinding#python#OnTextChanged()
@@ -111,8 +142,13 @@ setl formatoptions=croql
 setl commentstring=(*%s*)
 setl comments=s0:*\ -,m0:*\ \ ,ex0:*),s1:(*,mb:*,ex:*),:\/\/\/,:\/\/
 
+" tab/indentation settings
+setl expandtab
+setl nolisp
+setl nosmartindent
+
 " make ftplugin undo-able
-let b:undo_ftplugin = 'setl fo< cms< com< fdm<'
+let b:undo_ftplugin = 'setl fo< cms< com< fdm< et< si< lisp<'
 
 let &cpo = s:cpo_save
 
