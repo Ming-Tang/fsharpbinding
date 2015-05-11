@@ -1,6 +1,6 @@
 " Vim syntax file
 " Language:     F#
-" Last Change:  Sun 19 Oct 2014 11:11:44 PM CEST
+" Last Change:  Thu 04 Sep 2014 08:35:49 PM CEST
 " Maintainer:   Gregor Uhlenheuer <kongo2002@googlemail.com>
 "
 " Note:         This syntax file is a complete rewrite of the original version
@@ -61,7 +61,7 @@ syn region   fsharpEncl transparent matchgroup=fsharpKeyword start="\[|" matchgr
 
 
 " comments
-syn region   fsharpComment start="(\*" end="\*)" contains=fsharpComment,fsharpTodo
+syn region   fsharpComment start="(\*\ze\([^)]\|\n\)" end="\*)" contains=fsharpComment,fsharpTodo
 syn keyword  fsharpTodo contained TODO FIXME XXX NOTE
 
 " keywords
@@ -134,6 +134,7 @@ syn match    fsharpCharacter    "'\\\d\d\d'\|'\\[\'ntbr]'\|'.'"
 syn match    fsharpCharErr      "'\\\d\d'\|'\\\d'"
 syn match    fsharpCharErr      "'\\[^\'ntbr]'"
 syn region   fsharpString       start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=fsharpFormat
+syn region   fsharpRawString    start=+"""+ end=+"""+ contains=fsharpFormat
 
 syn match    fsharpFunDef       "->"
 syn match    fsharpRefAssign    ":="
@@ -183,6 +184,7 @@ syn region   fsharpAttrib matchgroup=fsharpAttribute start="\[<" end=">]"
 syn region   fsharpRegion matchgroup=fsharpPreCondit start="\%(end\)\@<!region.*$"
             \ end="endregion" fold contains=ALL contained
 
+
 if version >= 508 || !exists("did_fs_syntax_inits")
     if version < 508
         let did_fs_syntax_inits = 1
@@ -227,6 +229,8 @@ if version >= 508 || !exists("did_fs_syntax_inits")
     HiLink fsharpFloat         Float
 
     HiLink fsharpString        String
+    HiLink fsharpRawString     String
+
     HiLink fsharpFormat        Special
 
     HiLink fsharpModifier      StorageClass
