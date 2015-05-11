@@ -17,6 +17,8 @@ dest_bin  = $(dest_root)/ftplugin/bin/
 
 # Building
 
+fsautocomplete : $(ac_exe)
+
 $(ac_exe) : $(bin_d) ~/.config/.mono/certs
 	xbuild $(ac_fsproj) /property:OutputPath="$(bin_d)"
 
@@ -52,3 +54,5 @@ $(bin_d)     :; mkdir -p $(bin_d)
 
 clean :
 	rm -rf $(bin_d)
+
+.PHONY: fsautocomplete
