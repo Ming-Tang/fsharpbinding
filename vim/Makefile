@@ -35,7 +35,7 @@ install : $(ac_exe) $(dest_root) $(dest_bin)
 	mkdir -p $(dest_root)/syntax_checkers/fsharp
 
 	cp syntax/fsharp.vim $(dest_root)/syntax
-	cp indent/fsharp.vim $(dest_root)/syntax
+	cp indent/fsharp.vim $(dest_root)/indent
 	cp ftdetect/fsharp.vim $(dest_root)/ftdetect/fsharp.vim
 	cp ftplugin/fsharp.vim $(dest_root)/ftplugin/fsharp.vim
 	cp ftplugin/pyvim.py $(dest_root)/ftplugin/pyvim.py
